@@ -1,0 +1,42 @@
+{
+  "name": "sdk-example-backend",
+  "version": "1.0.0",
+  "description": "Backend example",
+  "main": "index.js",
+  "dependencies": {
+    "ansi-colors": "^4.1.1",
+    "balanced-match": "^1.0.2",
+    "concat-map": "^0.0.1",
+    "create-colyseus-app": "^0.14.4",
+    "brace-expansion": "^1.1.11",
+    "enquirer": "^2.3.6",
+    "inflight": "^1.0.6",
+    "glob": "^7.2.0",
+    "inherits": "^2.0.4",
+    "fs.realpath": "^1.0.0",
+    "once": "^1.4.0",
+    "path-is-absolute": "^1.0.1",
+    "wrappy": "^1.0.2",
+    "rimraf": "^2.7.1",
+    "minimatch": "^3.0.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alto-io/sdk-example-backend.git"
+  },
+  "keywords": [
+    "backend",
+    "arcadians",
+    "example"
+  ],
+  "author": "OPGames",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alto-io/sdk-example-backend/issues"
+  },
+  "homepage": "https://github.com/alto-io/sdk-example-backend#readme"
+}
