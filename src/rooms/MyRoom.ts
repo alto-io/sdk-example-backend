@@ -57,6 +57,7 @@ export class MyRoom extends Room<MyRoomState> {
     topBlock: this.topBlock,
     bottomBlock: this.bottomBlock,
     invisibleScoreBlock: this.invisibleScoreBlock,
+    score: this.score,
   };
 
   loop!: Delayed;
@@ -70,11 +71,11 @@ export class MyRoom extends Room<MyRoomState> {
     this.player.y += this.playerVelocityY;
 
     if (this.player.y + this.player.height * 0.5 >= this.game.height) {
-      //this.handleCollision();
+      this.gameOver();
     }
 
     if (this.player.y - this.player.height * 0.5 <= 0) {
-      //this.handleCollision();
+      this.gameOver();
     }
   }
 
@@ -107,16 +108,58 @@ export class MyRoom extends Room<MyRoomState> {
     }
   }
 
+  detectCollisionBetweenBodies(bodyA: any, bodyB: any) {
+    if (
+      bodyA.x - bodyA.width * 0.5 <= bodyB.x + bodyB.width * 0.5 &&
+      bodyA.x + bodyA.width * 0.5 >= bodyB.x - bodyB.width * 0.5 &&
+      bodyA.y - bodyA.height * 0.5 <= bodyB.y + bodyB.height * 0.5 &&
+      bodyA.y + bodyA.height * 0.5 >= bodyB.y - bodyB.height * 0.5
+    ) {
+      return true;
+    }
+  }
+
+  checkForCollisions() {
+    if (
+      this.detectCollisionBetweenBodies(this.player, this.topBlock) === true
+    ) {
+      this.gameOver();
+    }
+
+    if (
+      this.detectCollisionBetweenBodies(this.player, this.bottomBlock) === true
+    ) {
+      this.gameOver();
+    }
+
+    if (
+      this.detectCollisionBetweenBodies(
+        this.player,
+        this.invisibleScoreBlock
+      ) === true
+    ) {
+      this.invisibleScoreBlock.scored = true;
+      this.invisibleScoreBlock.x = -this.invisibleScoreBlock.width * 0.5;
+      this.score += 1;
+    }
+  }
+
+  gameOver() {
+    this.broadcast("gameover");
+  }
+
   update = () => {
     //console.log(this);
     this.updatePlayer();
     this.updateBlocks();
+    this.checkForCollisions();
 
     this.serverObjects = {
       player: this.player,
       topBlock: this.topBlock,
       bottomBlock: this.bottomBlock,
       invisibleScoreBlock: this.invisibleScoreBlock,
+      score: this.score,
     };
 
     this.broadcast("update", this.serverObjects);
