@@ -1,5 +1,6 @@
 import { Room, Client, Delayed } from "colyseus";
 import { MyRoomState } from "./schema/MyRoomState";
+import axios from "axios";
 
 export class MyRoom extends Room<MyRoomState> {
   maxClients: number = 1;
@@ -32,14 +33,14 @@ export class MyRoom extends Room<MyRoomState> {
 
   topBlock = {
     x: 900,
-    y: -85,
+    y: this.game.height + this.blocksVerticalDistance - this.blocksOffset,
     height: 800,
     width: 200,
   };
 
   bottomBlock = {
     x: 900,
-    y: 1014,
+    y: 0 - this.blocksVerticalDistance - this.blocksOffset,
     height: 800,
     width: 200,
   };
@@ -51,6 +52,10 @@ export class MyRoom extends Room<MyRoomState> {
     width: 200,
     scored: false,
   };
+
+  apiUrl = "https://lb-dev.gmfrens.games";
+
+  sessionId: string;
 
   serverObjects = {
     player: this.player,
@@ -144,12 +149,25 @@ export class MyRoom extends Room<MyRoomState> {
     }
   }
 
+  async testPostScore(sessionId: string, score: number) {
+    try {
+      let result = await axios.post(`${this.apiUrl}/game/score`, {
+        sessionId,
+        score,
+      });
+      console.log(sessionId, score, result);
+    }
+    catch (error) {
+      console.log(error);
+    }
+  }
+
   gameOver() {
+    this.testPostScore(this.sessionId, this.serverObjects.score);
     this.broadcast("gameover");
   }
 
   update = () => {
-    //console.log(this);
     this.updatePlayer();
     this.updateBlocks();
     this.checkForCollisions();
@@ -167,6 +185,10 @@ export class MyRoom extends Room<MyRoomState> {
 
   onCreate(options: any) {
     this.setState(new MyRoomState());
+
+    this.onMessage("sessionId", (client, message) => {
+      this.sessionId = message;
+    });
 
     this.onMessage("jump", (client, message) => {
       this.makePlayerJump();
