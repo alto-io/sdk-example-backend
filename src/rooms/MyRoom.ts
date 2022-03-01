@@ -155,7 +155,7 @@ export class MyRoom extends Room<MyRoomState> {
         sessionId,
         score,
       });
-      console.log(sessionId, score, result);
+      console.log(`Posted score ${score} succesfully!`);
     }
     catch (error) {
       console.log(error);
@@ -163,7 +163,7 @@ export class MyRoom extends Room<MyRoomState> {
   }
 
   gameOver() {
-    this.testPostScore(this.sessionId, this.serverObjects.score);
+    this.testPostScore(this.sessionId, this.score);
     this.broadcast("gameover");
   }
 
