@@ -163,9 +163,9 @@ export class MyRoom extends Room<MyRoomState> {
   }
 
   gameOver() {
-    this.testPostScore(this.sessionId, this.score);
     this.broadcast("gameover");
     this.disconnect();
+    this.testPostScore(this.sessionId, this.score);
   }
 
   update = () => {
