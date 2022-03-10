@@ -55,6 +55,8 @@ export class MyRoom extends Room<MyRoomState> {
 
   apiUrl = "https://lb-dev.gmfrens.games";
 
+  projectSecret = "wY9tD3uW5oV5nZ2yA7lD9pO7sB2aP9kU";
+
   sessionId: string;
 
   serverObjects = {
@@ -149,15 +151,15 @@ export class MyRoom extends Room<MyRoomState> {
     }
   }
 
-  async testPostScore(sessionId: string, score: number) {
+  async testPostScore(sessionId: string, score: number, projectSecret: string) {
     try {
       let result = await axios.post(`${this.apiUrl}/game/score`, {
         sessionId,
         score,
+        projectSecret,
       });
       console.log(`Posted score ${score} succesfully!`);
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error);
     }
   }
@@ -165,7 +167,7 @@ export class MyRoom extends Room<MyRoomState> {
   gameOver() {
     this.broadcast("gameover");
     this.disconnect();
-    this.testPostScore(this.sessionId, this.score);
+    this.testPostScore(this.sessionId, this.score, this.projectSecret);
   }
 
   update = () => {
